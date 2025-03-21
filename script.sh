@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e  # Прекратить выполнение при ошибке
+set -o pipefail  # Обрабатывать ошибки в конвейерах
 
 # создаём каталог task с вложенными директориями
 # task
@@ -17,12 +19,13 @@ touch dir2/empty
 # создаём файл task/dir2/hello.sh с таким содержанием:
 # #!/bin/bash
 # echo "$1, привет!"
-
-echo "#!/bin/bash" > dir2/hello.sh
-echo "echo \"\$1, привет!\"" >> dir2/hello.sh
+cat <<EOF > dir2/hello.sh
+#!/bin/bash
+echo "\$1, привет!"
+EOF
 
 # устанавливаем для task/dir2/hello.sh права rwxrw-r--
-chmod 766 dir2/hello.sh
+chmod 764 dir2/hello.sh
 
 # сохраняем список файлов task/dir2 в task/dir2/list.txt
 ls dir2 > dir2/list.txt
@@ -53,10 +56,10 @@ cat "Практическое задание"
 
 # ищем в файле "Практическое задание" строки, которые содержат слово "dir"
 # и затем отсортировываем их
-grep "dir" "Практическое задание" | sort
+grep "dir" "Практическое задание" | sort # из-за требования сортировки невозможно получить эталонный вывод
 
 # меняем текущую директорию на родительскую для task
 cd ..
 
 # удаляем директорию task со всем содержимым
-# rm -r task
+rm -rf task
